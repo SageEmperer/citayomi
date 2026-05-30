@@ -1,13 +1,15 @@
-class NovelLibrary {
+class NovelLibraryType {
   final String keyId;
   String libraryName;
   String libraryImage;
+  String webUrl;
   bool inUse;
 
-  NovelLibrary({
+  NovelLibraryType({
     required this.keyId,
     required this.libraryName,
     required this.libraryImage,
+    required this.webUrl,
     this.inUse = false,
   });
 }

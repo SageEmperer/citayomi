@@ -1,4 +1,6 @@
-import 'package:citayomi/data/novelLibraryData.dart';
+import 'package:citayomi/components/cards/sourceCard.dart';
+import 'package:citayomi/pages/novelPages/novel_library_page.dart';
+import 'package:citayomi/services/novelServices/novels_library_fetch.dart';
 // import 'package:citayomi/types/NovelLibraryType.dart';
 import 'package:flutter/material.dart';
 // import 'package:citayomi/data/novelLibraryData.dart';
@@ -51,83 +53,29 @@ class NovelsLibraryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Replace with your real Hive/Provider/Static list
-    final novelLibrary = novelLibraryData; 
+    final novelLibrary = fetchNovelLibraryData(); 
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,         // 3 items per row
-        mainAxisSpacing: 12,       // Balanced spacing
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.65,    // Crucial: Gives enough vertical room for text + image + text
-      ),
-      itemCount: novelLibrary.length,
-      itemBuilder: (context, index) {
-        final item = novelLibrary[index];
+    return ListView.separated(
+  padding: const EdgeInsets.all(12),
+  itemCount: novelLibrary.length,
+  separatorBuilder: (_, __) => const SizedBox(height: 12),
+  itemBuilder: (context, index) {
+    final item = novelLibrary[index];
 
-        return Card(
-          clipBehavior: Clip.antiAlias, // Ensures InkWell splash doesn't bleed past Card corners
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: InkWell(
-            onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => NovelDetailsScreen(item.keyId)));
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // 1. Library Name at the top
-                  Text(
-                    item.libraryName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14, 
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 6),
-                  
-                  // 2. Image below the Name with perfectly rounded corners
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        item.libraryImage,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        // Elegant fallback handling if asset loading fails
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[800],
-                            child: const Icon(Icons.broken_image, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  
-                  // 3. Subtitle / Status at the bottom
-                  Text(
-                    item.inUse ? 'Active' : 'Disabled',
-                    style: TextStyle(
-                      fontSize: 11, 
-                      color: item.inUse ? Colors.greenAccent : Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    return SourceCard(
+          imageSource: item.libraryImage,
+          title: item.libraryName,
+          subtitle: "English",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NovelLibraryPage(
+                  novelKey: item.keyId,
+              )),
+            );
+          }
         );
-      },
-    );
+  },
+);
   }
 }

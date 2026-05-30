@@ -2,18 +2,21 @@
 
 import 'package:citayomi/types/NovelLibraryType.dart';
 
-final List<NovelLibrary> novelLibraryData = [
+final List<NovelLibraryType> novelLibraryData = [
 
-  NovelLibrary(
+  NovelLibraryType(
     keyId: "freewebnovel",
     libraryName: "Free Web Novel",
     libraryImage: "assets/novelsLibraryImages/freewebnovel.png",
+    webUrl:"https://freewebnovel.com",
+
     inUse: true,
   ),
-  NovelLibrary(
+  NovelLibraryType(
     keyId: "firenovel",
     libraryName: "Fire Novel",
     libraryImage: "assets/novelsLibraryImages/novelfire.png",
+    webUrl:"https://novelfire.net",
     inUse: true,
   ),
 

@@ -1,0 +1,7 @@
+~/Android/Sdk/emulator/emulator -avd Pixel_9 -no-snapshot -verbose
+
+
+flutter pub run build_runner clean
+flutter pub run build_runner build --delete-conflicting-outputs
+
+adb shell pm clear com.example.citayomi

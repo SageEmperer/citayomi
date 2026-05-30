@@ -1,8 +1,20 @@
+import 'package:citayomi/data/novelLibraryData.dart';
+import 'package:citayomi/models/novelLibraryModal.dart';
 import 'package:citayomi/tabs/browseTab.dart';
 import 'package:citayomi/tabs/mangaTab.dart';
+import 'package:citayomi/types/NovelLibraryType.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:citayomi/services/sync_novel_library.dart';
+void  main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  // register
+  Hive.registerAdapter(NovelLibraryModalAdapter());
 
-void main() {
+  var box = await Hive.openBox<NovelLibraryModal>('novelLibrary');
+  await syncNovelLibraryData(box, novelLibraryData);
+  // await upDateNovelLibrary(box);
   runApp(const MainApp());
 }
 
