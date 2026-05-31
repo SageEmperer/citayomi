@@ -1,7 +1,9 @@
 
 
 
-import 'package:citayomi/models/novelLibraryModal.dart';
+import 'package:citayomi/models/NovelsModal/novelDetailModal.dart';
+import 'package:citayomi/models/NovelsModal/novelLibraryModal.dart';
+import 'package:citayomi/services/novelServices/novelsSaving/novel_detail_save.dart';
 import 'package:citayomi/services/novelServices/novels_library_fetch.dart';
 import 'package:citayomi/types/NovelDetailType.dart';
 
@@ -16,15 +18,15 @@ import 'package:html/dom.dart'
 
 
 
-Future<NovelDetailType?> fetchFireNovelDetail$(String keyId, String novelUrl) async {
+Future<NovelDetailModal?> fetchFireNovelDetail$(String keyId, String novelUrl) async {
   try {
     final NovelLibraryModal? novelData = fetchNovelLibraryItem(keyId);
     if (novelData == null) return null;
 
     final baseUrl = novelData.webUrl;
-    // CRITICAL FIX: Base info sits at /book/novel-name, not /book/novel-name/chapters
     final url = '$baseUrl/book/$novelUrl';
-    
+    print("final url");
+    print(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -33,6 +35,7 @@ Future<NovelDetailType?> fetchFireNovelDetail$(String keyId, String novelUrl) as
     );
 
     if (response.statusCode != 200) {
+      print("error getting the status code");
       return null;
     }
 
@@ -85,26 +88,50 @@ Future<NovelDetailType?> fetchFireNovelDetail$(String keyId, String novelUrl) as
         .map((element) => element.text.trim())
         .where((text) => text.isNotEmpty)
         .toList();
-    print(title);
-    print("title");
-    print(author);
-    print("author");
-    print(imageUrl);
-    print("imageUrl");
-    print(rank);
-    print("rank");
-    print(rating);
-    print("rating");
-    print(status);
-    print("status");
-    print(views);
-    print("views");
-    print(chaptersCount);
-    print("chaptersCount");
-    print(genres);
-    print("genres");    
+    final description = document
+        .querySelector('.summary .content')
+        ?.text
+        .trim() ??
+    document
+        .querySelector('div.content.expand-wrapper.no-expand')
+        ?.text
+        .trim() ??
+    '';
 
-    return NovelDetailType(
+    // fetching the chapters list ====================================================================
+    final chapterUrl = '$baseUrl/book/$novelUrl/chapters';
+
+    final chapterResponse = await http.get(
+      Uri.parse(chapterUrl),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+    );
+    if (chapterResponse.statusCode != 200) {
+      print("error getting the status code");
+      return null;
+    }
+    final chapterDom = parser.parse(chapterResponse.body);
+    final patinationItems = chapterDom.querySelectorAll('ul.pagination li');
+    var highestPage = 1;
+    for (var item in patinationItems) {
+      try{
+        final page = int.parse(item.text.trim());
+        if (page > highestPage) {
+          highestPage = page;
+        }
+      }catch(e){
+        print("error: $e");
+      }
+    }
+
+    // range based on highest page
+    // for (var i = 1; i <= highestPage; i++) {
+    //   final chapterPageUrl = '$baseUrl/book/$novelUrl/chapters';
+
+    // }
+    final novelDetail = NovelDetailModal(
+      keyId: keyId,
       title: title,
       author: author,
       imageUrl: imageUrl.isEmpty ? "https://placeholder.com/no-image.png" : imageUrl,
@@ -114,7 +141,11 @@ Future<NovelDetailType?> fetchFireNovelDetail$(String keyId, String novelUrl) as
       views: views,
       chaptersCount: chaptersCount,
       genres: genres,
+      novelUrl: novelUrl,
+      description: description.split('\n'),
     );
+    NovelsHiveHelper.saveNovelDetail(novelDetail as NovelDetailModal);
+    return novelDetail;
 
   } catch (e) {
     // Production log tracking approach

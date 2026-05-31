@@ -1,4 +1,4 @@
-import 'package:citayomi/models/novelLibraryModal.dart';
+import 'package:citayomi/models/NovelsModal/novelLibraryModal.dart';
 import 'package:citayomi/types/NovelLibraryType.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -32,6 +32,7 @@ Future<void> syncNovelLibraryData(Box<NovelLibraryModal> box, List<NovelLibraryT
         libraryImage: incomingItem.libraryImage,
         inUse: incomingItem.inUse,
         webUrl: incomingItem.webUrl,
+        filters: incomingItem.filters,
       );
     } else {
       // Scenario B: Item already exists -> Update structural metadata, 
@@ -42,6 +43,7 @@ Future<void> syncNovelLibraryData(Box<NovelLibraryModal> box, List<NovelLibraryT
         libraryImage: incomingItem.libraryImage,
         inUse: existingItem.inUse, // Preserves user toggle choice
         webUrl: incomingItem.webUrl, // FIXED: Accepts the incoming updated URL string configuration
+        filters: incomingItem.filters,
       );
       
       updatesToApply[incomingItem.keyId] = updatedItem;

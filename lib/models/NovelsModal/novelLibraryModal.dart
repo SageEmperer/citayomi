@@ -15,12 +15,15 @@ class NovelLibraryModal extends HiveObject {
   bool inUse;
   @HiveField(4)
   String webUrl;
+  @HiveField(5)
+  List<Map<String, dynamic>> filters;
   NovelLibraryModal({
     required this.keyId,
     required this.libraryName,
     required this.libraryImage,
     required this.inUse,
     required this.webUrl,
+    this.filters  = const [],
   });
   
 }

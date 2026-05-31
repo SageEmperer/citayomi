@@ -1,18 +1,28 @@
 import 'package:citayomi/data/novelLibraryData.dart';
-import 'package:citayomi/models/novelLibraryModal.dart';
+import 'package:citayomi/models/NovelsModal/novelChaptersCache.dart';
+import 'package:citayomi/models/NovelsModal/novelChaptersModal.dart';
+import 'package:citayomi/models/NovelsModal/novelDetailModal.dart';
+import 'package:citayomi/models/NovelsModal/novelLibraryModal.dart';
 import 'package:citayomi/tabs/browseTab.dart';
 import 'package:citayomi/tabs/mangaTab.dart';
 import 'package:citayomi/types/NovelLibraryType.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:citayomi/services/sync_novel_library.dart';
+import 'package:citayomi/services/novelServices/novelsSaving/sync_novel_library.dart';
 void  main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   // register
   Hive.registerAdapter(NovelLibraryModalAdapter());
+  Hive.registerAdapter(NovelDetailModalAdapter());
+  Hive.registerAdapter(NovelChaptersCacheAdapter());
+  Hive.registerAdapter(NovelChaptersModalAdapter());
+
 
   var box = await Hive.openBox<NovelLibraryModal>('novelLibrary');
+  // var novelDetailBox = await Hive.openBox<NovelDetailModal>('novelDetail');
+  // var novelChaptersCacheBox = await Hive.openBox<NovelChaptersCache>('novelChaptersCache');
+  // var novelChaptersBox = await Hive.openBox<NovelChaptersModal>('novelChapters');
   await syncNovelLibraryData(box, novelLibraryData);
   // await upDateNovelLibrary(box);
   runApp(const MainApp());

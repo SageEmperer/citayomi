@@ -11,9 +11,10 @@ import 'package:html/dom.dart'
     as dom;
 
 Future<List<Map<String, dynamic>>>
-    fetchFireNovels$(
+    fetchFreeWebNovels$(
   String keyId,
   int page,
+  {String filter = ""}
 ) async {
 
   try {
@@ -29,9 +30,20 @@ Future<List<Map<String, dynamic>>>
         baseUrl.isEmpty) {
       return [];
     }
+    final finalFilter = filter.isNotEmpty ? filter : "most-popular";
+    var url = '';
+    print("filtereeeeeeeeeeee");
+    print(finalFilter);
+    if (finalFilter == "most-popular") {
+    url =
+        '$baseUrl/sort/$finalFilter/';
+    }else{
+    url =
+        '$baseUrl/sort/$finalFilter/$page';
+    }
+    print("final url");
+    print(url);
 
-    final url =
-        '$baseUrl/genre-all/sort-popular/status-all/all-novel/?page=$page';
 
     final response = await http.get(
       Uri.parse(url),
@@ -54,7 +66,7 @@ Future<List<Map<String, dynamic>>>
 
     final dom.Element? mainContainer =
         document.querySelector(
-      'ul.novel-list.col6',
+      'div.ul-list1.ul-list1-2.ss-custom',
     );
 
     if (mainContainer == null) {
@@ -65,7 +77,7 @@ Future<List<Map<String, dynamic>>>
         novelItems =
         mainContainer
             .querySelectorAll(
-      'li.novel-item',
+      'div.li-row',
     );
 
     final novelList =
@@ -80,7 +92,7 @@ Future<List<Map<String, dynamic>>>
       final title =
           item
               .querySelector(
-                'h4.novel-title.text2row',
+                'h3.tit',
               )
               ?.text
               .trim() ??
@@ -101,7 +113,7 @@ Future<List<Map<String, dynamic>>>
       final chapters =
           item
               .querySelector(
-                '.novel-stats',
+                '.s1',
               )
               ?.text
               .replaceAll(

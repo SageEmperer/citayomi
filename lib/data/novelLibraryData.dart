@@ -9,8 +9,22 @@ final List<NovelLibraryType> novelLibraryData = [
     libraryName: "Free Web Novel",
     libraryImage: "assets/novelsLibraryImages/freewebnovel.png",
     webUrl:"https://freewebnovel.com",
-
     inUse: true,
+    filters: [
+      {
+        "filterName": "Popular",
+        "filterValue": "most-popular",
+      },
+      {
+        "filterName": "Latest",
+        "filterValue": "latest-novel",
+      },
+      {
+        "filterName": "Completed",
+        "filterValue": "completed-novel",
+      }
+    ],
+
   ),
   NovelLibraryType(
     keyId: "firenovel",

@@ -1,5 +1,6 @@
 
 class NovelDetailType {
+  final String keyId;
   final String title;
   final String author;
   final String imageUrl;
@@ -9,10 +10,13 @@ class NovelDetailType {
   final String? views;
   final String? chaptersCount;
   final List<String> genres;
-  final String? description;
+  final List<String> description;
   final String? source;
+  final String novelUrl;
+  final List<Map<String, dynamic>> chapterList;
 
   NovelDetailType({
+    this.keyId = "",
     required this.title,
     required this.author,
     required this.imageUrl,
@@ -22,7 +26,9 @@ class NovelDetailType {
     this.views,
     this.chaptersCount,
     this.genres = const [],
-    this.description,
+    this.description = const [],
     this.source,
+    required this.novelUrl,
+    this.chapterList = const [],
   });
 }

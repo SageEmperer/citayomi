@@ -34,23 +34,26 @@ class CustomItemCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image.network(
-                      imgUrl,
-                      fit: BoxFit.cover,
-
-                      errorBuilder: (
-                        context,
-                        error,
-                        stackTrace,
-                      ) {
-                        return Container(
-                          color: Colors.grey,
-
-                          child: const Icon(
-                            Icons.image,
-                          ),
-                        );
-                      },
+                    child: Hero(
+                      tag: imgUrl,
+                      child: Image.network(
+                        imgUrl,
+                        fit: BoxFit.cover,
+                      
+                        errorBuilder: (
+                          context,
+                          error,
+                          stackTrace,
+                        ) {
+                          return Container(
+                            color: Colors.grey,
+                      
+                            child: const Icon(
+                              Icons.image,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
 
